@@ -1,0 +1,2 @@
+terminer le jeux solo:
+    rentrer lettre/mot et verifier 

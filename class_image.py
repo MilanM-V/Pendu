@@ -19,6 +19,7 @@ class Image():
         
         
     def dessiner(self):
+        self.ecran.unlock()
         self.ecran.blit(self.image_surface,(self.x,self.y))
         
     def changeImage(self,lien):

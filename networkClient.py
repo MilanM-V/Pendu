@@ -62,21 +62,18 @@ class NetworkClient:
                     elif gagne:
                         self.gui.fenetreManager.result.changer_texte(f"Vous avez gagné en {11-nbCoup} coup")
                         self.gui.fini=True
-                if message.get('TYPE')=="GAME_UPDATE":
-                    scoreboard=message['scores']
-                    mot_commun = message['mot']
                 if message.get('TYPE')=='ELIMINATION':
-                    if message['msg']=="continue":
-                        print(10)
-                        self.nbRound=message.get('round',self.nbRound)
-                        self.gui.pendu.reset()
-                        self.gui.fenetreManager.lettreUtiliser.changer_texte("Lettre utiliser:\n")
-                        self.gui.gameInitialiser=False
-                        self.gui.fini=False
-                        self.lenMot=message['lenMot']
-                        self.gameStart=True
-                    elif message['msg']=="fin":
+                    if message['msg']=="fin":
                         self.gui.fenetreManager.result.changer_texte(f"Vous etes eliminer round {self.nbRound}")
+                if message.get('TYPE')=="NEW_ROUND":
+                    print(10)
+                    self.nbRound=message.get('round',self.nbRound)
+                    self.gui.pendu.reset()
+                    self.gui.fenetreManager.lettreUtiliser.changer_texte("Lettre utiliser:\n")
+                    self.gui.gameInitialiser=False
+                    self.gui.fini=False
+                    self.lenMot=message['lenMot']
+                    self.gameStart=True
                 if message.get('TYPE')=="GAME_END":
                     result = message.get('result')
                     winner = message.get('winner')
@@ -86,25 +83,7 @@ class NetworkClient:
                         self.gui.fenetreManager.result.changer_texte(f"Défaite. Gagnant : {winner}")
                     self.gui.fini = True
                     self.gameStart = False
-            elif isinstance(message, str):
-                if message.startswith("ELIMINATION:"):
-                    print(f"Événement: {message}")
-                elif message.startswith("NOUVEAU ROUND"):
-                    self.gui.fini=False
-                    try:
-                        _,new_round_str=message.split("ROUND ")
-                        self.nbRound=int(new_round_str.split(" ")[0])
-                        print(f"Événement: Démarrage du Round {self.nbRound}")
-                        self.gui.fenetreManager.retour() 
-                    except ValueError:
-                        print(f"Erreur d'analyse du message NOUVEAU ROUND: {message}")
-                elif message.startswith("VICTOIRE FINALE:"):
-                    print(f"Événement: {message}")
-                    self.gui.fenetreManager.result.changer_texte(message.split("FINALE: ")[-1])
-                    self.gui.fini=True
-                else:
-                    print(f"Message brut inconnu: {message}")
-                    
+
     async def run(self):
         try:
             async with websockets.connect(self.uri, open_timeout=5) as websocket:

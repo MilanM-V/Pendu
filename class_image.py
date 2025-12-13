@@ -22,7 +22,7 @@ class Image():
         self.ecran.blit(self.image_surface,(self.x,self.y))
         
     def changeImage(self,lien):
-        if hasattr(self,'image_surface'):
-            del self.image_surface
-        self.lien = lien
-        self.creeImage()
+        self.lien=lien
+        self.image_surface = pygame.image.load(self.lien).convert_alpha()
+        if self.taille=="ajuster":
+            self.image_surface = pygame.transform.scale(self.image_surface, (self.largeur,self.hauteur))

@@ -110,6 +110,7 @@ class Gui:
         self.fenetreManager.lettreUtiliserIa.changer_texte("Lettre utiliser:\n")
         self.fenetreManager.zoneMot.changeText('')
         self.fenetreManager.retourFenetre()
+        self.elements=self.fenetreManager.elementDessiner()
         
     def home(self):
         self.pendu.reset()
@@ -122,6 +123,7 @@ class Gui:
         self.fenetreManager.lettreUtiliserIa.changer_texte("Lettre utiliser:\n")
         self.fenetreManager.zoneMot.changeText('')
         self.fenetreManager.changeFenetre('Menu principale')
+        self.elements=self.fenetreManager.elementDessiner()
     def win(self):
         self.fenetreManager.changeFenetre('Win')
     def jeuSolo(self):
@@ -150,6 +152,7 @@ class Gui:
                 elem.changeText('')
     def jeuDuo(self):
         self.fenetreManager.changeFenetre('Jeux duo')
+        self.elements=self.fenetreManager.elementDessiner()
     def settingDuo(self):
         self.pendu.motSecret=self.fenetreManager.zoneMot.texte
         self.StartGame()             
@@ -199,13 +202,16 @@ class Gui:
     def jeuIa(self):
         self.pendu.motSecret=self.fenetreManager.zoneMotIA.texte
         self.fenetreManager.changeFenetre('Jeux Ia')
+        self.elements=self.fenetreManager.elementDessiner()
         self.bot=Bot()
         self.bot.taillePareil(len(self.pendu.motSecret))
         self.iaOnCour=True
     def iaSetting(self):
         self.fenetreManager.changeFenetre('Ia setting')
+        self.elements=self.fenetreManager.elementDessiner()
     def connectionMulti(self):
         self.fenetreManager.changeFenetre('Multi')
+        self.elements=self.fenetreManager.elementDessiner()
         self.network_client.start()
         self.mutli=True
     def contenueManager(self):
@@ -220,6 +226,7 @@ class Gui:
                 self.fenetreManager.labelErreur.dessiner()
             
     def run_game(self):
+        self.elements=self.fenetreManager.elementDessiner()
         while self.running:
             if self.fini:
                 self.win()
@@ -238,7 +245,7 @@ class Gui:
                 if self.network_client.nbJoueurServeur:
                     self.fenetreManager.nbJoueur.changer_texte(f"Nombre de joueur connecter: {self.network_client.nbJoueurServeur}")
             self.horloge.tick(self.fps)
-            self.elements=self.fenetreManager.elementDessiner()
+           
             self.evenementManager()
             self.gestionnaireFenetre.dessiner()
             self.contenueManager()

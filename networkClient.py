@@ -63,8 +63,8 @@ class NetworkClient:
                         self.gui.fenetreManager.result.changer_texte(f"Vous avez gagné en {11-nbCoup} coup")
                         self.gui.fini=True
                 if message.get('TYPE')=='ELIMINATION':
-                    if message['msg']=="fin":
-                        self.gui.fenetreManager.result.changer_texte(f"Vous etes eliminer round {self.nbRound}")
+                    self.gui.fenetreManager.result.changer_texte(f"Vous etes eliminer round {self.nbRound}")
+                    self.gui.fini=True
                 if message.get('TYPE')=="NEW_ROUND":
                     print(10)
                     self.nbRound=message.get('round',self.nbRound)

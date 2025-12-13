@@ -210,7 +210,6 @@ class Gui:
         self.mutli=True
     def contenueManager(self):
         for elem in self.elements:
-            self.ecran.unlock()
             elem.dessiner()
                 
         if self.showErreur:
@@ -241,9 +240,7 @@ class Gui:
             self.horloge.tick(self.fps)
             self.elements=self.fenetreManager.elementDessiner()
             self.evenementManager()
-            self.ecran.lock()
             self.gestionnaireFenetre.dessiner()
-            self.ecran.unlock()
             self.contenueManager()
             
             pygame.display.flip()

@@ -56,24 +56,28 @@ class NetworkClient:
                     gagne=message['gagne']
                     self.gui.fenetreManager.motCacher.changeMot(motIncomplet) 
                     self.gui.fenetreManager.imagePendu.changeImage(f'./image/{11-nbCoup}.png')
+                    
                     if elimine:
                         self.gui.fenetreManager.result.changer_texte(f"Vous etes eliminer round {self.nbRound}")
                         self.gui.fini=True
                     elif gagne:
-                        self.gui.fenetreManager.result.changer_texte(f"Vous avez gagné en {11-nbCoup} coup")
-                        self.gui.fini=True
+                        self.gui.fenetreManager.labelStatus.changer_texte(f"Mot trouvé en {11-nbCoup} coups ! Attente des autres...")
+                        
                 if message.get('TYPE')=='ELIMINATION':
-                    self.gui.fenetreManager.result.changer_texte(f"Vous etes eliminer round {self.nbRound}")
+                    self.gui.fenetreManager.result.changer_texte(message.get('reason', f"Vous etes eliminer round {self.nbRound}"))
                     self.gui.fini=True
+                    
                 if message.get('TYPE')=="NEW_ROUND":
-                    print(10)
+                    print(f"Round {message.get('round')}")
                     self.nbRound=message.get('round',self.nbRound)
                     self.gui.pendu.reset()
                     self.gui.fenetreManager.lettreUtiliser.changer_texte("Lettre utiliser:\n")
+                    self.gui.fenetreManager.labelStatus.changer_texte("")
                     self.gui.gameInitialiser=False
                     self.gui.fini=False
                     self.lenMot=message['lenMot']
                     self.gameStart=True
+                    
                 if message.get('TYPE')=="GAME_END":
                     result = message.get('result')
                     winner = message.get('winner')
@@ -108,4 +112,3 @@ class NetworkClient:
         thread = threading.Thread(target=_start_loop, daemon=True)
         thread.start()
         print("[Client] Démarré en arrière-plan (non bloquant)")
-

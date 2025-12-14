@@ -163,6 +163,7 @@ class Gui:
         self.elements=self.fenetreManager.elementDessiner()
         self.fenetreManager.boutonLettre.couleur=self.fenetreManager.boutonLettre.couleurBase
         self.fenetreManager.boutonMot.couleur=self.fenetreManager.boutonMot.couleurBase
+        self.fenetreManager.labelStatus.changer_texte("")
         for elem in self.elements:
             if isinstance(elem,(ZoneDeTexte)):
                 elem._desactiver()
@@ -375,6 +376,8 @@ class FenetreManager():
                          (self.gui.gestionnaireFenetre.hauteurAct//2)
                         ,self.gui.gestionnaireFenetre.largeurAct//6,(self.gui.gestionnaireFenetre.hauteurAct//10),(6, 182, 212),"Mot",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.choixMot)
         jeuxSolo.append(self.boutonMot)
+        self.labelStatus = Label(self.gui.ecran, "", (6, 182, 212), (self.gui.gestionnaireFenetre.largeurAct // 2, self.gui.gestionnaireFenetre.hauteurAct * 0.12), 'center', 40, 'transparent')
+        jeuxSolo.append(self.labelStatus)
         self.result=Label(self.gui.ecran,f"Vous avez gagner en {self.gui.pendu.nombreTentative} coup",(248, 250, 252),(self.gui.gestionnaireFenetre.largeurAct//2,
                                                                                                              self.gui.gestionnaireFenetre.hauteurAct//2-self.gui.gestionnaireFenetre.hauteurAct*0.1),'center',70,'transparent')
         labelTuto=Label(self.gui.ecran,"Appuyez sur ENTREE pour valider la lettre ou le mot",(71, 85, 105),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.92),'center',25,'transparent',font="Arial")

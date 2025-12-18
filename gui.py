@@ -66,6 +66,7 @@ class Gui:
                                             result+=f"{lettre} "
                                         self.fenetreManager.motCacher.mot=result
                                     else:
+                                        motIncomplet=self.pendu.show()
                                         self.showErreur=True
                                         self.showErreurTime=pygame.time.get_ticks()
                                     elem.changeText('')
@@ -73,11 +74,14 @@ class Gui:
                                 self.fenetreManager.imagePendu.changeImage(f'./image/{11-self.pendu.nombreTentative}.png')
                                 if self.pendu.nombreTentative==1:
                                     self.fenetreManager.result.changer_texte(f"Vous avez Perdu")
+                                    self.fenetreManager.resultWord.changer_texte(f"Le mot été {self.pendu.motSecret}")
                                     self.fini=True
+                                    self.elements=self.fenetreManager.elementDessiner()
                                 if "_" not in self.fenetreManager.motCacher.mot :
-                                    print(self.fenetreManager.motCacher.mot)
                                     self.fenetreManager.result.changer_texte(f"Vous avez gagner en {11-self.pendu.nombreTentative} coup")
+                                    self.fenetreManager.resultWord.changer_texte(f"Le mot été {self.pendu.motSecret}")
                                     self.fini=True
+                                    self.elements=self.fenetreManager.elementDessiner()
                             elif elem.texte!="":
                                 if self.choix=="Lettre" and self.network_client.gameStart:
                                     if elem.texte not in self.pendu.listeLettreTest:
@@ -126,6 +130,7 @@ class Gui:
         self.elements=self.fenetreManager.elementDessiner()
     def win(self):
         self.fenetreManager.changeFenetre('Win')
+        self.elements=self.fenetreManager.elementDessiner()
     def jeuSolo(self):
         self.pendu.motSecret=self.contenu[randint(0,len(self.contenu)-1)].strip()
         self.StartGame()
@@ -378,15 +383,18 @@ class FenetreManager():
         jeuxSolo.append(self.boutonMot)
         self.labelStatus = Label(self.gui.ecran, "", (6, 182, 212), (self.gui.gestionnaireFenetre.largeurAct // 2, self.gui.gestionnaireFenetre.hauteurAct * 0.12), 'center', 40, 'transparent')
         jeuxSolo.append(self.labelStatus)
-        self.result=Label(self.gui.ecran,f"Vous avez gagner en {self.gui.pendu.nombreTentative} coup",(248, 250, 252),(self.gui.gestionnaireFenetre.largeurAct//2,
-                                                                                                             self.gui.gestionnaireFenetre.hauteurAct//2-self.gui.gestionnaireFenetre.hauteurAct*0.1),'center',70,'transparent')
         labelTuto=Label(self.gui.ecran,"Appuyez sur ENTREE pour valider la lettre ou le mot",(71, 85, 105),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.92),'center',25,'transparent',font="Arial")
         jeuxSolo.append(labelTuto)
+        self.result=Label(self.gui.ecran,f"Vous avez gagner en {self.gui.pendu.nombreTentative} coup",(248, 250, 252),(self.gui.gestionnaireFenetre.largeurAct//2,
+                                                                                                             self.gui.gestionnaireFenetre.hauteurAct//2-self.gui.gestionnaireFenetre.hauteurAct*0.1),'center',70,'transparent')
         winScreen.append(self.result)
+        self.resultWord=Label(self.gui.ecran,f"Le mot été",(248, 250, 252),(self.gui.gestionnaireFenetre.largeurAct//2,
+                                                                                                             self.gui.gestionnaireFenetre.hauteurAct//2+self.gui.gestionnaireFenetre.hauteurAct*0.05),'center',70,'transparent')
+        winScreen.append(self.resultWord)
         homeBoutton=Bouton(self.gui.ecran,self.gui.gestionnaireFenetre.largeurAct/2-round(self.gui.gestionnaireFenetre.largeurAct*0.0781),(self.gui.gestionnaireFenetre.hauteurAct//2+(self.gui.gestionnaireFenetre.hauteurAct//6)),round(self.gui.gestionnaireFenetre.largeurAct*0.0781)*2
                            ,self.gui.gestionnaireFenetre.hauteurAct//8,(6, 182, 212),"Menu principale",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.home)
         winScreen.append(homeBoutton)
-        self.timerLabel=Label(self.gui.ecran,"Temps avant le debut de la partie: 10sec","White",(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.7),'center',50,'transparent')
+        self.timerLabel=Label(self.gui.ecran,"Temps avant le debut de la partie: ??sec","White",(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.7),'center',50,'transparent')
         jeuxMulti.append(self.timerLabel)
         self.nbJoueur=Label(self.gui.ecran,"Nombre de joueur connecter: 0","White",(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.5),'center',50,'transparent')
         jeuxMulti.append(self.nbJoueur)

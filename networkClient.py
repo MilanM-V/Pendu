@@ -85,8 +85,8 @@ class NetworkClient:
                         self.gui.fenetreManager.result.changer_texte(f"🎉 VICTOIRE ! Vous avez gagné !")
                     else:
                         self.gui.fenetreManager.result.changer_texte(f"Défaite. Gagnant : {winner}")
-                    self.gui.fini = True
-                    self.gameStart = False
+                    self.gui.fini=True
+                    self.gameStart=False
 
     async def run(self):
         try:

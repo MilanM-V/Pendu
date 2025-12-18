@@ -15,6 +15,7 @@ import sys
 class Gui:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()
         pygame.key.set_repeat(500, 30)
         self.largeur_ecran=1920
         self.longueur_ecran=1080
@@ -32,6 +33,7 @@ class Gui:
         self.showErreur=False
         self.iaOnCour=False
         self.mutli=False
+        self.thx=""
         self.showErreurTime=0
         self.gameInitialiser=False
         self.showErreurDuree=2000
@@ -39,11 +41,18 @@ class Gui:
             self.contenu = f.readlines()
         
     def evenementManager(self):
-            
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 self.running=False
             if event.type==pygame.KEYDOWN:
+                if event.unicode.isprintable():
+                    self.thx+=event.unicode
+                    if self.thx.lower()=="zach" or self.thx.lower()=="adnane":
+                        pygame.mixer.music.load("./musique/Premier_Gaou.mp3")
+                        pygame.mixer.music.set_volume(0.4)
+                        pygame.mixer.music.play()
+                else:
+                    self.thx=""
                 if event.key!=pygame.K_TAB:
                     for elem in self.elements:
                         if isinstance(elem,ZoneDeTexte):

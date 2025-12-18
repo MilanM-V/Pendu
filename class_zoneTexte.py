@@ -78,7 +78,6 @@ class ZoneDeTexte():
 
             self.warningShow=True
             self.waringTime=pygame.time.get_ticks()
-        
         elif event.unicode.isprintable() and len(self.texte)<self.nbLettreMax:
             self.texte+=event.unicode
         elif event.unicode.isprintable():
@@ -86,8 +85,6 @@ class ZoneDeTexte():
 
             self.warningShow=True
             self.waringTime=pygame.time.get_ticks()
-       
-            
             
         if self.texte!=texteAvant or event.key==pygame.K_BACKSPACE:
             self._updateTexteSurface()

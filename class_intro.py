@@ -94,7 +94,7 @@ class IntroScene:
     def __init__(self,width,height,text):
         self.width=width
         self.height=height
-        self.font=pygame.font.SysFont("comicsansms", 80, bold=True)
+        self.font=pygame.font.SysFont("comicsansms", int(80*height/1080), bold=True)
         self.couleur=(6,182,212)
         self.base_y=height//2.5
 
@@ -104,7 +104,7 @@ class IntroScene:
 
         self.act="texteIntro"
         self.intro_timer=0
-        self.intro_font=pygame.font.SysFont("couriernew", 60)
+        self.intro_font=pygame.font.SysFont("couriernew", int(60*height/1080))
         self.intro_scale=1.0
 
         self.letters=[]
@@ -130,7 +130,46 @@ class IntroScene:
         self.rotationY=-100
         self.penduLongueur=self.base_y-self.rotationY+60
         self.fini=False
+        
+    def actualiser_dimensions(self,width,height,text):
+        self.width=width
+        self.height=height
+        self.font=pygame.font.SysFont("comicsansms", int(80*height/1080), bold=True)
+        self.couleur=(6,182,212)
+        self.base_y=height//2.5
 
+        self.particles=[]
+        for i in range(120):
+            self.particles.append(Particule(random.randint(0,width),random.randint(0,height),(30,50,80),fond=True,width=width,height=height))
+
+        self.act="texteIntro"
+        self.intro_timer=0
+        self.intro_font=pygame.font.SysFont("couriernew", int(60*height/1080))
+        self.intro_scale=1.0
+
+        self.letters=[]
+        total_width=sum(self.font.size(c)[0] for c in text)
+        x=(width-total_width)//2
+
+        for i,charactere in enumerate(text):
+            widthNow=self.font.size(charactere)[0]
+            self.letters.append(Lettre(charactere,self.font,self.couleur,x,self.base_y,i*6))
+            x+=widthNow
+
+        self.full_text=pygame.Surface((total_width+20,150),pygame.SRCALPHA)
+        xAct=10
+        for charactere in text:
+            img=self.font.render(charactere,True,self.couleur)
+            glow=self.font.render(charactere,True,(0,100,200))
+            self.full_text.blit(glow,(xAct-2,2)) 
+            self.full_text.blit(img,(xAct,0))
+            xAct+=img.get_width()
+
+        self.rotationTime=0
+        self.rotationX=width//2
+        self.rotationY=-100
+        self.penduLongueur=self.base_y-self.rotationY+60
+        self.fini=False
     def update(self):
         for p in self.particles[:]:
             p.update()
@@ -195,7 +234,7 @@ class IntroScene:
             pygame.draw.line(screen,(150,150,150),(self.rotationX,0),(corde_endX,corde_endY),3)
             screen.blit(img,rect)
             if int(self.rotationTime*3)%2==0:
-                font=pygame.font.SysFont("arial",20)
+                font=pygame.font.SysFont("arial",int(20*self.height/1080))
                 msg=font.render("Appuyez sur ESPACE",True,(100,200,200))
                 screen.blit(msg,(self.width//2-msg.get_width()//2,self.height-80))
 

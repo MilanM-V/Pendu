@@ -2,12 +2,12 @@ import pygame
 
 
 class Fenetre:
-    def __init__(self, x, y, titre,couleurFond=(250,250,250)):
-        self.largeurBase = x
-        self.hauteurBase = y
+    def __init__(self,x,y,titre,couleurFond=(250,250,250)):
+        self.largeurBase=x
+        self.hauteurBase=y
         self.largeurAct=x
         self.hauteurAct=y
-        self.titre = titre
+        self.titre=titre
         self.fullscreenInfo=False
         self.couleurFond=couleurFond
     def creer_fenetre(self):

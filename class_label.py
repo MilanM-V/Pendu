@@ -12,11 +12,11 @@ class Label:
         self.aligner_texte=aligner_texte
         self.taille_police=taille_police
         self.couleur_fond=couleur_fond
-        self.ecartLigne=ecartLigne
+        self.ecartLigne=int(ecartLigne*ecran.get_height()/1080)
         if font and font.endswith(".ttf"): 
-            self.fond=pygame.font.Font(font, self.taille_police)
+            self.fond=pygame.font.Font(font, int(self.taille_police*ecran.get_height()/1080))
         else:  
-            self.fond=pygame.font.SysFont(font, self.taille_police)
+            self.fond=pygame.font.SysFont(font, int(self.taille_police*ecran.get_height()/1080))
         self.lignes=self.texte.split('\n')
         self.images=[]
         self.zone_textes=[]
@@ -47,19 +47,19 @@ class Label:
         self.afficher=True
         for ligne in range(len(self.lignes)):
             if self.couleur_fond=='transparent':
-                self.image=self.fond.render(self.lignes[ligne], True, self.couleur)
+                self.image=self.fond.render(self.lignes[ligne],True,self.couleur)
                 self.image.convert_alpha()
             else:
-                self.image=self.fond.render(self.lignes[ligne], True, self.couleur, self.couleur_fond)
+                self.image=self.fond.render(self.lignes[ligne],True,self.couleur,self.couleur_fond)
             self.images.append(self.image)
             self.zone_texte=self.image.get_rect()
             
             if self.aligner_texte=="center":
-                self.zone_texte.center=(self.x, self.y + ligne * self.ecartLigne)
+                self.zone_texte.center=(self.x, self.y+ligne*self.ecartLigne)
             elif self.aligner_texte=="left":
-                self.zone_texte.topleft=(self.x, self.y + ligne * self.ecartLigne)
+                self.zone_texte.topleft=(self.x,self.y+ligne*self.ecartLigne)
             elif self.aligner_texte=="right":
-                self.zone_texte.topright = (self.x, self.y + ligne * self.ecartLigne)
+                self.zone_texte.topright = (self.x,self.y+ligne*self.ecartLigne)
             self.zone_textes.append(self.zone_texte)
 
     def dessiner(self):

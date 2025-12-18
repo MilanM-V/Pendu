@@ -20,7 +20,7 @@ class ZoneDeTexte():
         self.scrollX=0
         self.censure=censure
         self.desactivate=desactivate
-        self.font = pygame.font.SysFont(None, self.hauteur-30)
+        self.font = pygame.font.SysFont(None, int(((self.hauteur-30)*self.ecran.get_height()/1080)))
         self.rect=pygame.Rect(x,y,self.largeur,self.hauteur)
         self.surface_texte=None
         self.caractereEnTrop=0
@@ -37,9 +37,9 @@ class ZoneDeTexte():
         
     def _updateTexteSurface(self):
         if self.censure:
-            self.surface_texte = self.font.render("*"*len(self.texte), True, self.couleurTexte)
+            self.surface_texte=self.font.render("*"*len(self.texte), True, self.couleurTexte)
         else:
-            self.surface_texte = self.font.render(self.texte, True, self.couleurTexte)
+            self.surface_texte=self.font.render(self.texte, True, self.couleurTexte)
         
     def dessiner(self):
         bordure_rect=(self.x-self.tailleBordure,self.y-self.tailleBordure,self.largeur+2*self.tailleBordure,self.hauteur+2*self.tailleBordure)
@@ -69,7 +69,6 @@ class ZoneDeTexte():
             return
         
         texteAvant=self.texte
-        
         if event.key==pygame.K_BACKSPACE:
             if len(self.texte)>0:
                 self.texte=self.texte[:-1]
@@ -118,7 +117,7 @@ class AfficheMots():
         self.largeur=largeur
         self.hauteur=hauteur
         self.couleurTexte=couleurTexte
-        self.font = pygame.font.SysFont(None,self.largeur//(self.nbLettre))
+        self.font = pygame.font.SysFont(None,(self.largeur//(self.nbLettre))*ecran.get_height()//1080)
         self.mot="_ "+"_ "*(self.nbLettre-2)+"_"
         self.update_text_surface()
         

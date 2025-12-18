@@ -103,10 +103,10 @@ class Gui:
                                     self.network_client.addLettre(elem.texte)
                                     elem.changeText('')
 
-                    
                 if event.key==pygame.K_F11:
                     self.gestionnaireFenetre.fullscreen()
                     self.fenetreManager.actualiser()
+                    self.elements=self.fenetreManager.elementDessiner()
             if event.type==pygame.MOUSEBUTTONDOWN:
                 for elem in self.elements:
                     if isinstance(elem,ZoneDeTexte):
@@ -244,7 +244,7 @@ class Gui:
                 self.fenetreManager.labelErreur.dessiner()
     
     def IntroScene(self):
-        intro=IntroScene(self.largeur_ecran,self.longueur_ecran,"PENDU")
+        intro=IntroScene(self.gestionnaireFenetre.largeurAct,self.gestionnaireFenetre.hauteurAct,"PENDU")
         running=True
         while running:
             for event in pygame.event.get():
@@ -254,6 +254,9 @@ class Gui:
                     if event.key==pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
+                    if event.key==pygame.K_F11:
+                        self.gestionnaireFenetre.fullscreen()
+                        intro.actualiser_dimensions(self.gestionnaireFenetre.largeurAct,self.gestionnaireFenetre.hauteurAct,"PENDU")
                 intro.gestionBalance(event)
             intro.update()
             intro.draw(self.ecran)
@@ -337,52 +340,51 @@ class FenetreManager():
                     self.gui.gestionnaireFenetre.largeurAct*0.2083,self.gui.gestionnaireFenetre.hauteurAct*0.5555,(30, 41, 59))
         menuPrincipalBouton.append(carre)
         boutonSolo=Bouton(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct//2-self.gui.gestionnaireFenetre.largeurAct*0.0781),(self.gui.gestionnaireFenetre.hauteurAct//2-self.gui.gestionnaireFenetre.hauteurAct*0.0926)
-                            ,300,75,(6, 182, 212),"👤 Jouer tout seul",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.jeuSolo,font="segoeuiemoji",font_size=25,border_radius=10)
+                            ,self.gui.gestionnaireFenetre.largeurAct*0.1563,self.gui.gestionnaireFenetre.hauteurAct*0.0695,(6, 182, 212),"👤 Jouer tout seul",couleur_texte=(15, 23, 42),bordure_taille=5*self.gui.gestionnaireFenetre.hauteurAct/1080,couleur_bordure=(0,0,0),action=self.gui.jeuSolo,font="segoeuiemoji",font_size=25*self.gui.gestionnaireFenetre.hauteurAct/1080,border_radius=10)
         menuPrincipalBouton.append(boutonSolo)
         boutonDuo=Bouton(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct/2-self.gui.gestionnaireFenetre.largeurAct*0.0781),(self.gui.gestionnaireFenetre.hauteurAct//2)
-                        ,300,75,(6, 182, 212),"👥 Jouer à deux",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.jeuDuo,font="segoeuiemoji",font_size=25,border_radius=10)
+                        ,self.gui.gestionnaireFenetre.largeurAct*0.1563,self.gui.gestionnaireFenetre.hauteurAct*0.0695,(6, 182, 212),"👥 Jouer à deux",couleur_texte=(15, 23, 42),bordure_taille=5*self.gui.gestionnaireFenetre.hauteurAct/1080,couleur_bordure=(0,0,0),action=self.gui.jeuDuo,font="segoeuiemoji",font_size=25*self.gui.gestionnaireFenetre.hauteurAct/1080,border_radius=10)
         menuPrincipalBouton.append(boutonDuo)
         boutonIa=Bouton(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct/2-self.gui.gestionnaireFenetre.largeurAct*0.0781),(self.gui.gestionnaireFenetre.hauteurAct//2+self.gui.gestionnaireFenetre.hauteurAct*0.0926)
-                        ,300,75,(6, 182, 212),"🤖 Jouer contre une ia",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.iaSetting,font="segoeuiemoji",font_size=25,border_radius=10)
+                        ,self.gui.gestionnaireFenetre.largeurAct*0.1563,self.gui.gestionnaireFenetre.hauteurAct*0.0695,(6, 182, 212),"🤖 Jouer contre une ia",couleur_texte=(15, 23, 42),bordure_taille=5*self.gui.gestionnaireFenetre.hauteurAct/1080,couleur_bordure=(0,0,0),action=self.gui.iaSetting,font="segoeuiemoji",font_size=25*self.gui.gestionnaireFenetre.hauteurAct/1080,border_radius=10)
         menuPrincipalBouton.append(boutonIa)
         
-        boutonMulti=Bouton(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct/2-self.gui.gestionnaireFenetre.largeurAct*0.0781),(self.gui.gestionnaireFenetre.hauteurAct//2+200)
-                        ,300,75,(51, 65, 85),"🌍 Jouer en multi\n(en cours de developpement)",couleur_texte=(100, 116, 139),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.connectionMulti,font="segoeuiemoji",font_size=20,border_radius=10)
+        boutonMulti=Bouton(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct/2-self.gui.gestionnaireFenetre.largeurAct*0.0781),(self.gui.gestionnaireFenetre.hauteurAct//2+self.gui.gestionnaireFenetre.hauteurAct*(0.1852))
+                        ,self.gui.gestionnaireFenetre.largeurAct*0.1563,self.gui.gestionnaireFenetre.hauteurAct*0.0695,(6, 182, 212),"🌍 Jouer en multi",couleur_texte=(15, 23, 42),bordure_taille=5*self.gui.gestionnaireFenetre.hauteurAct/1080,couleur_bordure=(0,0,0),action=self.gui.connectionMulti,font="segoeuiemoji",font_size=20*self.gui.gestionnaireFenetre.hauteurAct/1080,border_radius=10)
         menuPrincipalBouton.append(boutonMulti)
         
-        labelTitre=Label(self.gui.ecran,"Pendu",(6, 182, 212),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.2777),'center',50,'transparent')
+        labelTitre=Label(self.gui.ecran,"Pendu",(6, 182, 212),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.2777),'center',50*self.gui.gestionnaireFenetre.hauteurAct/1080,'transparent')
         menuPrincipalBouton.append(labelTitre)
         
-        labelSousTitre=Label(self.gui.ecran,"Choisissez votre mode de jeu",(148, 163, 184),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.34),'center',30,'transparent',font="Helvetica")
+        labelSousTitre=Label(self.gui.ecran,"Choisissez votre mode de jeu",(148, 163, 184),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.34),'center',30*self.gui.gestionnaireFenetre.hauteurAct/1080,'transparent',font="Helvetica")
         menuPrincipalBouton.append(labelSousTitre)
         
-        labelQuit=Label(self.gui.ecran,"Appuyez sur ECHAP pour quitter",(71, 85, 105),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.92),'center',25,'transparent',font="Arial")
+        labelQuit=Label(self.gui.ecran,"Appuyez sur ECHAP pour quitter",(71, 85, 105),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.92),'center',25*self.gui.gestionnaireFenetre.hauteurAct/1080,'transparent',font="Arial")
         menuPrincipalBouton.append(labelQuit)
         
         self.zoneMot=ZoneDeTexte(ecran=self.gui.ecran,x=(self.gui.gestionnaireFenetre.largeurAct//2)-((self.gui.gestionnaireFenetre.largeurAct//12)),
                          y=self.gui.gestionnaireFenetre.hauteurAct/2-(self.gui.gestionnaireFenetre.hauteurAct//16),
-                         largeur=self.gui.gestionnaireFenetre.largeurAct//6,hauteur=80,couleurTexte=(0,0,0),couleurFond=(200,200,200),couleurBordure=(0,0,0),tailleBordure=3,nbLettreMax=12,actif=True,desactivate=False,cara_excle=caracteres_speciaux,censure=True)
+                         largeur=self.gui.gestionnaireFenetre.largeurAct//6,hauteur=self.gui.gestionnaireFenetre.hauteurAct*0.074,couleurTexte=(0,0,0),couleurFond=(200,200,200),couleurBordure=(0,0,0),tailleBordure=3,nbLettreMax=12,actif=True,desactivate=False,cara_excle=caracteres_speciaux,censure=True)
         jeuxDuo.append(self.zoneMot)    
         self.titre=Label(self.gui.ecran,"Rentrez le mot à deviner",(248, 250, 252),((self.gui.gestionnaireFenetre.largeurAct//2),self.gui.gestionnaireFenetre.hauteurAct//3),
-                                   "center",50,"transparent",ecartLigne=60)
+                                   "center",50*self.gui.gestionnaireFenetre.hauteurAct/1080,"transparent",ecartLigne=60)
         jeuxDuo.append(self.titre)
         boutonValide=Bouton(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct/2-round(self.gui.gestionnaireFenetre.largeurAct*0.0781)),(self.gui.gestionnaireFenetre.hauteurAct//2+self.gui.gestionnaireFenetre.hauteurAct//8)
-                        ,round(self.gui.gestionnaireFenetre.largeurAct*0.0781)*2,100,(6, 182, 212),"Valider",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.settingDuo)
+                        ,round(self.gui.gestionnaireFenetre.largeurAct*0.0781)*2,100*self.gui.gestionnaireFenetre.hauteurAct/1080,(6, 182, 212),"Valider",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.settingDuo)
         jeuxDuo.append(boutonValide)
-        
         self.zoneMotIA=ZoneDeTexte(ecran=self.gui.ecran,x=(self.gui.gestionnaireFenetre.largeurAct//2)-((self.gui.gestionnaireFenetre.largeurAct//12)),
                          y=self.gui.gestionnaireFenetre.hauteurAct/2-(self.gui.gestionnaireFenetre.hauteurAct//16),
-                         largeur=self.gui.gestionnaireFenetre.largeurAct//6,hauteur=80,couleurTexte=(0,0,0),couleurFond=(200,200,200),couleurBordure=(0,0,0),tailleBordure=3,nbLettreMax=12,actif=True,desactivate=False,cara_excle=caracteres_speciaux)
+                         largeur=self.gui.gestionnaireFenetre.largeurAct//6,hauteur=self.gui.gestionnaireFenetre.hauteurAct*0.074,couleurTexte=(0,0,0),couleurFond=(200,200,200),couleurBordure=(0,0,0),tailleBordure=3,nbLettreMax=12,actif=True,desactivate=False,cara_excle=caracteres_speciaux)
         jeuxSettingIa.append(self.zoneMotIA)    
         self.titreIA=Label(self.gui.ecran,"Rentrez le mot à deviner",(248, 250, 252),((self.gui.gestionnaireFenetre.largeurAct//2),self.gui.gestionnaireFenetre.hauteurAct//3),
-                                   "center",50,"transparent",ecartLigne=60)
+                                   "center",50*self.gui.gestionnaireFenetre.hauteurAct/1080,"transparent",ecartLigne=60)
         jeuxSettingIa.append(self.titreIA)
         boutonValideIA=Bouton(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct/2-round(self.gui.gestionnaireFenetre.largeurAct*0.0781)),(self.gui.gestionnaireFenetre.hauteurAct//2+self.gui.gestionnaireFenetre.hauteurAct//8)
-                        ,round(self.gui.gestionnaireFenetre.largeurAct*0.0781)*2,100,(6, 182, 212),"Valider",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.jeuIa)
+                        ,round(self.gui.gestionnaireFenetre.largeurAct*0.0781)*2,100*self.gui.gestionnaireFenetre.hauteurAct/1080,(6, 182, 212),"Valider",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.jeuIa)
         jeuxSettingIa.append(boutonValideIA)
         
         self.lettreUtiliserIa=Label(self.gui.ecran,"Lettre utiliser:\n",(248, 250, 252),(self.gui.gestionnaireFenetre.largeurAct//8,self.gui.gestionnaireFenetre.hauteurAct//3),
-                                   "left",50,"transparent",ecartLigne=30)
+                                   "left",50*self.gui.gestionnaireFenetre.hauteurAct/1080,"transparent",ecartLigne=30)
         jeuxIa.append(self.lettreUtiliserIa)
         self.imagePenduIa=Image(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct//4*3),self.gui.gestionnaireFenetre.hauteurAct//8,"./image/1.png",
                               "ajuster",self.gui.gestionnaireFenetre.largeurAct//6,self.gui.gestionnaireFenetre.largeurAct//3)
@@ -390,17 +392,15 @@ class FenetreManager():
         self.motCacherIa=AfficheMots(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct//2)-((self.gui.gestionnaireFenetre.largeurAct//3)//2),self.gui.gestionnaireFenetre.hauteurAct//2,
                               self.gui.gestionnaireFenetre.largeurAct//3,round(self.gui.gestionnaireFenetre.hauteurAct*0.01852),5,(248, 250, 252))
         jeuxIa.append(self.motCacherIa)
-        
-        
         self.lettreUtiliser=Label(self.gui.ecran,"Lettre utiliser:\n",(248, 250, 252),(self.gui.gestionnaireFenetre.largeurAct//8,self.gui.gestionnaireFenetre.hauteurAct//3),
-                                   "left",50,"transparent",ecartLigne=30)
+                                   "left",50*self.gui.gestionnaireFenetre.hauteurAct/1080,"transparent",ecartLigne=30)
         jeuxSolo.append(self.lettreUtiliser)
         self.imagePendu=Image(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct//4*3),self.gui.gestionnaireFenetre.hauteurAct//8,"./image/1.png",
                               "ajuster",self.gui.gestionnaireFenetre.largeurAct//6,self.gui.gestionnaireFenetre.largeurAct//3)
         jeuxSolo.append(self.imagePendu)
         self.zone=ZoneDeTexte(ecran=self.gui.ecran,x=(self.gui.gestionnaireFenetre.largeurAct//2)-((self.gui.gestionnaireFenetre.largeurAct//12)),
                          y=self.gui.gestionnaireFenetre.hauteurAct-(self.gui.gestionnaireFenetre.hauteurAct/3),
-                         largeur=self.gui.gestionnaireFenetre.largeurAct//6,hauteur=80,couleurTexte=(0,0,0),couleurFond=(200,200,200),couleurBordure=(0,0,0),tailleBordure=3,cara_excle=caracteres_speciaux)
+                         largeur=self.gui.gestionnaireFenetre.largeurAct//6,hauteur=self.gui.gestionnaireFenetre.hauteurAct*0.074,couleurTexte=(0,0,0),couleurFond=(200,200,200),couleurBordure=(0,0,0),tailleBordure=3,cara_excle=caracteres_speciaux)
         jeuxSolo.append(self.zone)        
         self.motCacher=AfficheMots(self.gui.ecran,(self.gui.gestionnaireFenetre.largeurAct//2)-((self.gui.gestionnaireFenetre.largeurAct//3)//2),self.gui.gestionnaireFenetre.hauteurAct//5,
                               self.gui.gestionnaireFenetre.largeurAct//3,round(self.gui.gestionnaireFenetre.hauteurAct*0.01852),5,(248, 250, 252))
@@ -413,22 +413,22 @@ class FenetreManager():
                          (self.gui.gestionnaireFenetre.hauteurAct//2)
                         ,self.gui.gestionnaireFenetre.largeurAct//6,(self.gui.gestionnaireFenetre.hauteurAct//10),(6, 182, 212),"Mot",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.choixMot)
         jeuxSolo.append(self.boutonMot)
-        self.labelStatus = Label(self.gui.ecran, "", (6, 182, 212), (self.gui.gestionnaireFenetre.largeurAct // 2, self.gui.gestionnaireFenetre.hauteurAct * 0.12), 'center', 40, 'transparent')
+        self.labelStatus = Label(self.gui.ecran, "", (6, 182, 212), (self.gui.gestionnaireFenetre.largeurAct // 2, self.gui.gestionnaireFenetre.hauteurAct * 0.12), 'center', 40*self.gui.gestionnaireFenetre.hauteurAct/1080, 'transparent')
         jeuxSolo.append(self.labelStatus)
-        labelTuto=Label(self.gui.ecran,"Appuyez sur ENTREE pour valider la lettre ou le mot",(71, 85, 105),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.92),'center',25,'transparent',font="Arial")
+        labelTuto=Label(self.gui.ecran,"Appuyez sur ENTREE pour valider la lettre ou le mot",(71, 85, 105),(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.92),'center',25*self.gui.gestionnaireFenetre.hauteurAct/1080,'transparent',font="Arial")
         jeuxSolo.append(labelTuto)
         self.result=Label(self.gui.ecran,f"Vous avez gagner en {self.gui.pendu.nombreTentative} coup",(248, 250, 252),(self.gui.gestionnaireFenetre.largeurAct//2,
-                                                                                                             self.gui.gestionnaireFenetre.hauteurAct//2-self.gui.gestionnaireFenetre.hauteurAct*0.1),'center',70,'transparent')
+                                                                                                             self.gui.gestionnaireFenetre.hauteurAct//2-self.gui.gestionnaireFenetre.hauteurAct*0.1),'center',70*self.gui.gestionnaireFenetre.hauteurAct/1080,'transparent')
         winScreen.append(self.result)
         self.resultWord=Label(self.gui.ecran,f"Le mot été",(248, 250, 252),(self.gui.gestionnaireFenetre.largeurAct//2,
-                                                                                                             self.gui.gestionnaireFenetre.hauteurAct//2+self.gui.gestionnaireFenetre.hauteurAct*0.05),'center',70,'transparent')
+                                                                                                             self.gui.gestionnaireFenetre.hauteurAct//2+self.gui.gestionnaireFenetre.hauteurAct*0.05),'center',70*self.gui.gestionnaireFenetre.hauteurAct/1080,'transparent')
         winScreen.append(self.resultWord)
         homeBoutton=Bouton(self.gui.ecran,self.gui.gestionnaireFenetre.largeurAct/2-round(self.gui.gestionnaireFenetre.largeurAct*0.0781),(self.gui.gestionnaireFenetre.hauteurAct//2+(self.gui.gestionnaireFenetre.hauteurAct//6)),round(self.gui.gestionnaireFenetre.largeurAct*0.0781)*2
                            ,self.gui.gestionnaireFenetre.hauteurAct//8,(6, 182, 212),"Menu principale",couleur_texte=(15, 23, 42),bordure_taille=5,couleur_bordure=(0,0,0),action=self.gui.home)
         winScreen.append(homeBoutton)
-        self.timerLabel=Label(self.gui.ecran,"Temps avant le debut de la partie: ??sec","White",(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.7),'center',50,'transparent')
+        self.timerLabel=Label(self.gui.ecran,"Temps avant le debut de la partie: ??sec","White",(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.7),'center',50*self.gui.gestionnaireFenetre.hauteurAct/1080,'transparent')
         jeuxMulti.append(self.timerLabel)
-        self.nbJoueur=Label(self.gui.ecran,"Nombre de joueur connecter: 0","White",(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.5),'center',50,'transparent')
+        self.nbJoueur=Label(self.gui.ecran,"Nombre de joueur connecter: 0","White",(self.gui.gestionnaireFenetre.largeurAct//2,self.gui.gestionnaireFenetre.hauteurAct*0.5),'center',50*self.gui.gestionnaireFenetre.hauteurAct/1080,'transparent')
         jeuxMulti.append(self.nbJoueur)
         self.elementParFenetre['Menu principale']=menuPrincipalBouton
         self.elementParFenetre['Jeux solo']=jeuxSolo

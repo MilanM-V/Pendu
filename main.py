@@ -1,4 +1,4 @@
 from gui import *
 
 jeuGui=Gui()
-jeuGui.run_game()
+jeuGui.IntroScene()

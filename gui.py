@@ -4,17 +4,21 @@ from class_zoneTexte import*
 from class_label import*
 from class_image import*
 from class_carre import*
+from class_intro import*
 from networkClient import*
 import pygame
 from random import*
 from jeux import *
 import time
+import sys
 
 class Gui:
     def __init__(self):
         pygame.init()
         pygame.key.set_repeat(500, 30)
-        self.gestionnaireFenetre=Fenetre(1920,1080,"Pendu",(15, 23, 42))
+        self.largeur_ecran=1920
+        self.longueur_ecran=1080
+        self.gestionnaireFenetre=Fenetre(self.largeur_ecran,self.longueur_ecran,"Pendu",(15, 23, 42))
         self.ecran=self.gestionnaireFenetre.creer_fenetre()
         self.running=True
         self.fps=40
@@ -223,13 +227,32 @@ class Gui:
     def contenueManager(self):
         for elem in self.elements:
             elem.dessiner()
-                
         if self.showErreur:
             time=pygame.time.get_ticks()
             if time-self.showErreurTime>self.showErreurDuree:
                 self.showErreur=False
             else:
                 self.fenetreManager.labelErreur.dessiner()
+    
+    def IntroScene(self):
+        intro=IntroScene(self.largeur_ecran,self.longueur_ecran,"PENDU")
+        running=True
+        while running:
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    pygame.quit()
+                if event.type==pygame.KEYDOWN:
+                    if event.key==pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                intro.gestionBalance(event)
+            intro.update()
+            intro.draw(self.ecran)
+            if intro.fini:
+                running=False
+            pygame.display.flip()
+            self.horloge.tick(60)
+        self.run_game()
             
     def run_game(self):
         self.elements=self.fenetreManager.elementDessiner()

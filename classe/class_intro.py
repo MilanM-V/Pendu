@@ -6,13 +6,14 @@ import random
 
 class Particule:
     def __init__(self,x,y,couleur,fond=False,width=1920,height=1080):
+        """methode pour initialiser les parametre de la class Particule"""
         self.x=x
         self.y=y
         self.fond = fond
         self.couleur = couleur
         self.width=width
         self.height=height
-        if self.fond:
+        if self.fond:#si les particule sont en fond leur duree de vie dois etre infini
             self.vitesse_x=random.uniform(-0.5,0.5)
             self.vitesse_y=random.uniform(-0.5,0.5)
             self.taille=random.randint(2,4)
@@ -26,19 +27,23 @@ class Particule:
             self.pv=8
 
     def update(self):
+        """methode pour mettre a jour les partiucles"""
+        #calcule de leur position
         self.x+=self.vitesse_x
         self.y+=self.vitesse_y
+        #si les particule ne sont pas en fond calculer les vitesse et leur pv restant
         if not self.fond:
             self.vitesse_y+=0.2
             self.taille-=0.1
             self.duree-=self.pv
-        else:
+        else:#sinon calculer les deplacement dasn l'espace
             if self.x<0 or self.x>self.width: 
                 self.vitesse_x*=-1
             if self.y<0 or self.y>self.height: 
                 self.vitesse_y*=-1
 
     def dessiner(self,surface):
+        """methode pour dessier les particules"""
         if self.duree>0 and self.taille>0:
             ecran=pygame.Surface((int(self.taille*2),int(self.taille*2)),pygame.SRCALPHA)
             alpha=int(self.duree)
@@ -47,6 +52,7 @@ class Particule:
 
 class Lettre:
     def __init__(self,charactere,font,couleur,final_x,final_y,delay_frames):
+        """methode pour initialiser les parametres de la class Lettres"""
         self.charactere=charactere
         self.font=font
         self.couleur=couleur
@@ -66,12 +72,15 @@ class Lettre:
         self.active=False
 
     def update(self):
+        """methode pour mettre a jour les lettre"""
         self.dropGo=False 
+        #calcule pour savoir quand afficher la lettre enf ocntion de son delay demander
         if not self.active:
             self.timer+=1
             if self.timer>=self.delay_frames:
                 self.active=True
             return
+        #calcule du drop de la lettre
         if not self.drop:
             self.vitesse_y+=self.gravity
             self.y+=self.vitesse_y
@@ -85,6 +94,7 @@ class Lettre:
                     self.drop=True
 
     def dessiner(self,surface):
+        """methode pour dessiner les lettres"""
         if self.active:
             surface.blit(self.ombre,(self.x+2,self.y+2))
             surface.blit(self.image,(self.x,self.y))
@@ -92,30 +102,28 @@ class Lettre:
 
 class IntroScene:
     def __init__(self,width,height,text):
+        """methode pour initialiser les parametres de la class Intoscene"""
         self.width=width
         self.height=height
         self.font=pygame.font.SysFont("comicsansms", int(80*height/1080), bold=True)
         self.couleur=(6,182,212)
         self.base_y=height//2.5
-
         self.particles=[]
+        #creation des particules en fond
         for i in range(120):
             self.particles.append(Particule(random.randint(0,width),random.randint(0,height),(30,50,80),fond=True,width=width,height=height))
-
         self.act="texteIntro"
         self.intro_timer=0
         self.intro_font=pygame.font.SysFont("couriernew", int(60*height/1080))
         self.intro_scale=1.0
-
         self.letters=[]
-        total_width=sum(self.font.size(c)[0] for c in text)
+        total_width=sum(self.font.size(c)[0] for c in text) #calcule de la taille du texte
         x=(width-total_width)//2
-
+        #initialisation des lettres avec leur delay d'aparition
         for i,charactere in enumerate(text):
             widthNow=self.font.size(charactere)[0]
             self.letters.append(Lettre(charactere,self.font,self.couleur,x,self.base_y,i*6))
             x+=widthNow
-
         self.full_text=pygame.Surface((total_width+20,150),pygame.SRCALPHA)
         xAct=10
         for charactere in text:
@@ -124,7 +132,6 @@ class IntroScene:
             self.full_text.blit(glow,(xAct-2,2)) 
             self.full_text.blit(img,(xAct,0))
             xAct+=img.get_width()
-
         self.rotationTime=0
         self.rotationX=width//2
         self.rotationY=-100
@@ -132,30 +139,26 @@ class IntroScene:
         self.fini=False
         
     def actualiser_dimensions(self,width,height,text):
+        """methode pour mettre à jour les dimension ect quand l'ecran change de dimension"""
         self.width=width
         self.height=height
         self.font=pygame.font.SysFont("comicsansms", int(80*height/1080), bold=True)
         self.couleur=(6,182,212)
         self.base_y=height//2.5
-
         self.particles=[]
         for i in range(120):
             self.particles.append(Particule(random.randint(0,width),random.randint(0,height),(30,50,80),fond=True,width=width,height=height))
-
         self.act="texteIntro"
         self.intro_timer=0
         self.intro_font=pygame.font.SysFont("couriernew", int(60*height/1080))
         self.intro_scale=1.0
-
         self.letters=[]
         total_width=sum(self.font.size(c)[0] for c in text)
         x=(width-total_width)//2
-
         for i,charactere in enumerate(text):
             widthNow=self.font.size(charactere)[0]
             self.letters.append(Lettre(charactere,self.font,self.couleur,x,self.base_y,i*6))
             x+=widthNow
-
         self.full_text=pygame.Surface((total_width+20,150),pygame.SRCALPHA)
         xAct=10
         for charactere in text:
@@ -164,47 +167,53 @@ class IntroScene:
             self.full_text.blit(glow,(xAct-2,2)) 
             self.full_text.blit(img,(xAct,0))
             xAct+=img.get_width()
-
         self.rotationTime=0
         self.rotationX=width//2
         self.rotationY=-100
         self.penduLongueur=self.base_y-self.rotationY+60
         self.fini=False
     def update(self):
+        """methode pour mettre a jour l'intro et gerer l'enchainement"""
+        #gerer les particules et ne plus les afficher si elles on plus de pv
         for p in self.particles[:]:
             p.update()
             if p.duree<=0:
                 self.particles.remove(p)
+        #gerer l'affichage du texte d'intro et son effet de battement
         if self.act=="texteIntro":
             self.intro_timer+=1
             self.intro_scale=1.0+math.sin(self.intro_timer*0.05)*0.05
             if self.intro_timer>150:
                 self.act="drop"
-
+        #gerer l'effet de drop des lettre
         elif self.act=="drop":
             allDrop=True
             for letter in self.letters:
                 letter.update()
                 if letter.dropGo:
+                    #ajouter des particules quand les lettre tombes
                     for i in range(10):
                         self.particles.append(Particule(letter.x+ 20,letter.y+80,(255,255,255),width=self.width,height=self.height,fond=False))
                 if not letter.drop:
                     allDrop=False
             if allDrop:
                 self.act="balance"
+        #gerer le balancement
         elif self.act=="balance":
             self.rotationTime+=0.05
 
     def gestionBalance(self,event):
+        """methode de la fin de l'intro ( quand espace appuyer alors on arrete l'intro)"""
         if self.act=="balance":
             if event.type==pygame.KEYDOWN and event.key==pygame.K_SPACE:
                 self.fini=True
 
-    def draw(self, screen):
-        screen.fill((15,23,42))
-        for p in self.particles:
+    def dessiner(self, screen):
+        """methode pour dessiner/afficher les intros"""
+        screen.fill((15,23,42))#mettre le fond
+        for p in self.particles:#afficher les particules
             p.dessiner(screen)
-        if self.act == "texteIntro":
+        if self.act=="texteIntro":#gerer le texte d'intro
             alpha=255
             if self.intro_timer<30: 
                 alpha=int(self.intro_timer*255/30)
@@ -222,7 +231,7 @@ class IntroScene:
         elif self.act=="drop":
             for letter in self.letters:
                 letter.dessiner(screen)
-        elif self.act=="balance":
+        elif self.act=="balance": #gerer la system de balancement avec les calcules pour le balancement des lettres et de la corde
             angle=math.sin(self.rotationTime) * 0.2
             deg=math.degrees(angle)
             xAct=self.rotationX-self.penduLongueur*math.sin(angle)

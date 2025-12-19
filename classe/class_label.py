@@ -1,10 +1,11 @@
 import pygame
-from class_fenetre import *
+from classe.class_fenetre import *
 
 
 
 class Label:
     def __init__(self,ecran,texte,couleur,position,aligner_texte,taille_police,couleur_fond,font=None,ecartLigne=50):
+        """methode pour initialiser les parametre de la fonction Label"""
         self.ecran=ecran
         self.texte=texte
         self.couleur=couleur
@@ -22,6 +23,7 @@ class Label:
         self.zone_textes=[]
         self.afficher=True
         for ligne in range(len(self.lignes)):
+            #gerer si le fond du label est rtansparent ou pas
             if self.couleur_fond=='transparent':
                 self.image=self.fond.render(self.lignes[ligne], True, self.couleur)
                 self.image.convert_alpha()
@@ -29,7 +31,7 @@ class Label:
                 self.image=self.fond.render(self.lignes[ligne], True, self.couleur, self.couleur_fond)
             self.images.append(self.image)
             self.zone_texte=self.image.get_rect()
-            
+            #gerer ou on alligne le texte
             if self.aligner_texte=="center":
                 self.zone_texte.center=(self.x,self.y+ligne*self.ecartLigne)
             elif self.aligner_texte=="left":

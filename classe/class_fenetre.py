@@ -3,6 +3,7 @@ import pygame
 
 class Fenetre:
     def __init__(self,x,y,titre,couleurFond=(250,250,250)):
+        """initialisation des parametre de la class Fenetre"""
         self.largeurBase=x
         self.hauteurBase=y
         self.largeurAct=x
@@ -32,6 +33,7 @@ class Fenetre:
         pygame.display.flip()
         return self.fenetre
     def dessiner(self):
+        """methode pour afficher la fenetre"""
         self.fenetre.fill(self.couleurFond)
 
     

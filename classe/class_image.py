@@ -2,6 +2,7 @@ import pygame
 
 class Image():
     def __init__(self,ecran,x,y,lien,taille="remplir",largeur=None,hauteur=None):
+        """methode pour initialiser les parametre de la class Image"""
         self.ecran=ecran
         self.x=x
         self.y=y
@@ -13,6 +14,7 @@ class Image():
         self.creeImage()
     
     def creeImage(self):
+        """methode pour creer l'image"""
         try:
             self.image_surface = pygame.image.load(self.lien).convert_alpha()
             if self.taille == "ajuster" and self.largeur and self.hauteur:
@@ -24,6 +26,7 @@ class Image():
             self.image_surface.fill((100,100,100))
         
     def dessiner(self):
+        """methode pour dessiner l'image"""
         if self.image_surface:
             try:
                 self.ecran.blit(self.image_surface, (self.x, self.y))
@@ -31,5 +34,6 @@ class Image():
                 pass 
         
     def changeImage(self,lien):
+        """methode pour changer l'image"""
         self.lien=lien
         self.creeImage()

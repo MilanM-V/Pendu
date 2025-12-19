@@ -3,6 +3,7 @@ import pygame
 
 class Bouton:
     def __init__(self,ecran, x, y, largeur, hauteur, couleur, texte,action=None, couleur_texte=(0,0,0), echelle=1, bordure_taille=5, couleur_bordure=(255, 255, 255),border_radius=5,font_size=40,image=None,font=None):
+        """initialisation des parametre de la class Bouton"""
         self.x=x
         self.y=y
         self.largeur=int(largeur*echelle)
@@ -50,7 +51,7 @@ class Bouton:
                     self.ecran.blit(texte_surface,(texte_rect))
     def changer_texte(self,text):
         #methode pour changer le texte des boutons
-        self.texte=text
+        self.texte=text.split("\n")
 
     def check_click(self, pos):
         #methode pour verifier si le bouton est cliquer
@@ -59,6 +60,7 @@ class Bouton:
             return True
         return False
     def check_click_action(self,pos):
+        "methode pour verifier si un bouton est appuyer et executer sa fonction"
         self.boutonPresse=False
         self.bordure_taille=self.bordure_taille_start
         if self.rect.collidepoint(pos):
